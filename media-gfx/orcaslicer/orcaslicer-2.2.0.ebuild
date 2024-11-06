@@ -45,6 +45,7 @@ RDEPEND="
 	x11-libs/gtk+:3
 	>=x11-libs/wxGTK-3.2.2.1-r3:${WX_GTK_VER}[X,opengl,webkit]
 	media-libs/nanosvg:=
+	sci-libs/nlopt
 "
 DEPEND="${RDEPEND}
 	media-libs/qhull[static-libs]
