@@ -1,0 +1,35 @@
+#!/bin/bash
+if ! [ -z "${_OLD_ATLAS_PATH:+_}" ] ; then
+    deactivate
+fi
+
+ATLAS_VER=%ATLAS_VER%
+ATLAS_MAVEN_VER=%MAVEN_VER%
+_OLD_ATLAS_PATH=${PATH}
+_OLD_ATLAS_PS1=${PS1}
+
+ATLAS_DIR="/opt/atlassian-plugin-sdk/${ATLAS_VER}"
+
+deactivate() {
+    if ! [ -z "${_OLD_ATLAS_PATH:+_}" ] ; then
+        PATH="${_OLD_ATLAS_PATH}"
+        export PATH
+        unset _OLD_ATLAS_PATH
+    fi
+
+    if ! [ -z "${_OLD_ATLAS_PS1+_}" ] ; then
+        PS1="${_OLD_ATLAS_PS1}"
+        export PS1
+        unset _OLD_ATLAS_PS1
+    fi
+    unset ATLAS_VER
+    unset ATLAS_MAVEN_VER
+
+    hash -r 2>/dev/null
+}
+
+PATH=${ATLAS_DIR}/bin:${ATLAS_DIR}/apache-maven-${ATLAS_MAVEN_VER}/bin:$PATH
+export PATH
+hash -r 2>/dev/null
+
+PS1="(atl-sdk ${ATLAS_VER}) ${PS1-}"
