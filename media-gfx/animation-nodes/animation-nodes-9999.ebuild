@@ -6,7 +6,7 @@ EAPI=7
 DISTUTILS_SINGLE_IMPL=1
 DISTUTILS_USE_SETUPTOOLS=no
 PYTHON_COMPAT=( python3_{9..12} )
-BLENDER_VER="4.0"
+BLENDER_VER="4.2"
 
 inherit distutils-r1 git-r3
 
@@ -27,8 +27,8 @@ DEPEND="
 "
 
 src_install() {
-	echo "{\"Copy Target\" : \"${D}/usr/share/blender/${BLENDER_VER}/scripts/addons\"}" > conf.json
-	mkdir -p ${D%/}/usr/share/blender/${BLENDER_VER}/scripts/addons
+	echo "{\"Copy Target\" : \"${D}/usr/share/blender/${BLENDER_VER}/scripts/addons_core\"}" > conf.json
+	mkdir -p ${D%/}/usr/share/blender/${BLENDER_VER}/scripts/addons_core
 	esetup.py build --copy --noversioncheck
 	python_optimize "${D%/}/usr/share/blender/${BLENDER_VER}/scripts/addons/animation_nodes"
 }

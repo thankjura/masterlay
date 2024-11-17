@@ -60,6 +60,7 @@ PATCHES=(
 
 src_prepare() {
 	eapply_user
+	git apply "${FILESDIR}/6204.patch"
 	append-cxxflags -Wno-error=template-id-cdtor
 	cmake_src_prepare
 }
