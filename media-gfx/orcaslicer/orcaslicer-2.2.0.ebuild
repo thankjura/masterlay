@@ -56,6 +56,7 @@ PATCHES=(
 	"${FILESDIR}/orcaslicer-2.2.0-fix-wx.patch"
 	"${FILESDIR}/orcaslicer-2.2.0-fix-install-path.patch"
 	"${FILESDIR}/7057.patch"
+	"${FILESDIR}/7591.patch"
 )
 
 src_prepare() {

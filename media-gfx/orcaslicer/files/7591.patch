@@ -1,0 +1,27 @@
+From 4c5252f8a98af0f657d8d26bba5a59ab354edb68 Mon Sep 17 00:00:00 2001
+From: David Kocik <kocikdav@gmail.com>
+Date: Mon, 23 Sep 2024 14:11:53 +0200
+Subject: [PATCH] Fix webview blank issue on Linux
+
+Cherry-picked from prusa3d/PrusaSlicer@c3ca39d5c5458a58402abe737ef90c061b76aeb5
+
+Co-authored-by: David Kocik <kocikdav@gmail.com>
+---
+ src/OrcaSlicer.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/OrcaSlicer.cpp b/src/OrcaSlicer.cpp
+index dc140e26295..dd714dc4cb9 100644
+--- a/src/OrcaSlicer.cpp
++++ b/src/OrcaSlicer.cpp
+@@ -1051,6 +1051,10 @@ int CLI::run(int argc, char **argv)
+     // Also on Linux, we need to tell Xlib that we will be using threads,
+     // lest we crash when we fire up GStreamer.
+     XInitThreads();
++
++    // https://github.com/prusa3d/PrusaSlicer/issues/12969
++    ::setenv("WEBKIT_DISABLE_COMPOSITING_MODE", "1", /* replace */ false);
++    ::setenv("WEBKIT_DISABLE_DMABUF_RENDERER", "1", /* replace */ false);
+ #endif
+ 
+ 	// Switch boost::filesystem to utf8.
