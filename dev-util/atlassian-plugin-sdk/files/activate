@@ -8,7 +8,7 @@ ATLAS_MAVEN_VER=%MAVEN_VER%
 _OLD_ATLAS_PATH=${PATH}
 _OLD_ATLAS_PS1=${PS1}
 
-ATLAS_DIR="/opt/atlassian-plugin-sdk/${ATLAS_VER}"
+ATLAS_HOME="/opt/atlassian-plugin-sdk/${ATLAS_VER}"
 
 deactivate() {
     if ! [ -z "${_OLD_ATLAS_PATH:+_}" ] ; then
@@ -24,11 +24,13 @@ deactivate() {
     fi
     unset ATLAS_VER
     unset ATLAS_MAVEN_VER
+    unset ATLAS_HOME
 
     hash -r 2>/dev/null
 }
 
-PATH=${ATLAS_DIR}/bin:${ATLAS_DIR}/apache-maven-${ATLAS_MAVEN_VER}/bin:$PATH
+PATH=${ATLAS_HOME}/bin:${ATLAS_HOME}/apache-maven-${ATLAS_MAVEN_VER}/bin:$PATH
+export ATLAS_HOME
 export PATH
 hash -r 2>/dev/null
 
