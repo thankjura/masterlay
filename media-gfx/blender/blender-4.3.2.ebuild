@@ -14,8 +14,8 @@ DESCRIPTION="3D Creation/Animation/Publishing System"
 HOMEPAGE="https://www.blender.org"
 
 if [[ ${PV} = *9999* ]] ; then
-	inherit git-r3
 	EGIT_LFS="yes"
+	inherit git-r3
 	EGIT_REPO_URI="https://projects.blender.org/blender/blender.git"
 	EGIT_SUBMODULES=( '*' '-lib/*' )
 	RESTRICT="!test? ( test )"
@@ -182,7 +182,6 @@ BDEPEND="
 	X? (
 		x11-base/xorg-proto
 	)
-	dev-vcs/git-lfs
 "
 
 PATCHES=(
