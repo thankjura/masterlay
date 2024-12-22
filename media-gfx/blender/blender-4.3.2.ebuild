@@ -14,14 +14,15 @@ DESCRIPTION="3D Creation/Animation/Publishing System"
 HOMEPAGE="https://www.blender.org"
 
 if [[ ${PV} = *9999* ]] ; then
-	EGIT_LFS="yes"
 	inherit git-r3
+	EGIT_LFS="yes"
 	EGIT_REPO_URI="https://projects.blender.org/blender/blender.git"
 	EGIT_SUBMODULES=( '*' '-lib/*' )
 	RESTRICT="!test? ( test )"
 else
 	SRC_URI="
 		https://download.blender.org/source/${P}.tar.xz
+		https://mirror.freedif.org/blender/release/Blender${PV%.*}/${P}-linux-x64.tar.xz
 	"
 	# 	test? (
 	# 		https://projects.blender.org/blender/blender-test-data/archive/blender-v$(ver_cut 1-2)-release.tar.gz
@@ -181,6 +182,7 @@ BDEPEND="
 	X? (
 		x11-base/xorg-proto
 	)
+	dev-vcs/git-lfs
 "
 
 PATCHES=(
@@ -566,6 +568,7 @@ src_install() {
 
 	mv "${ED}/usr/bin/blender-thumbnailer" "${ED}/usr/bin/blender-${BV}-thumbnailer" || die
 	mv "${ED}/usr/bin/blender" "${ED}/usr/bin/blender-${BV}" || die
+	mv ${WORKDIR}/${P}-linux-x64/${BV}/datafiles/assets "${ED}/usr/share/blender/${BV}/datafiles/"
 }
 
 pkg_postinst() {
