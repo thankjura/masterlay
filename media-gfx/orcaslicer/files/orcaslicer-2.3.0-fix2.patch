@@ -1,0 +1,12 @@
+diff -ru OrcaSlicer-2.3.0-beta.old/src/slic3r/GUI/PhysicalPrinterDialog.cpp OrcaSlicer-2.3.0-beta/src/slic3r/GUI/PhysicalPrinterDialog.cpp
+--- OrcaSlicer-2.3.0-beta.old/src/slic3r/GUI/PhysicalPrinterDialog.cpp	2025-02-22 12:58:23.000000000 +0300
++++ OrcaSlicer-2.3.0-beta/src/slic3r/GUI/PhysicalPrinterDialog.cpp	2025-02-22 22:02:15.551229097 +0300
+@@ -374,7 +374,7 @@
+     // Always fill in the "printhost_port" combo box from the config and select it.
+     {
+         Choice* choice = dynamic_cast<Choice*>(m_optgroup->get_field("printhost_port"));
+-        choice->set_values({ m_config->opt_string("printhost_port") });
++        choice->set_values(std::vector<std::string>({ m_config->opt_string("printhost_port") }));
+         choice->set_selection();
+     }
+ 

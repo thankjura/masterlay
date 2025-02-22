@@ -1,0 +1,17 @@
+diff -ru OrcaSlicer-2.3.0-beta.old/src/libslic3r/CMakeLists.txt OrcaSlicer-2.3.0-beta/src/libslic3r/CMakeLists.txt
+--- OrcaSlicer-2.3.0-beta.old/src/libslic3r/CMakeLists.txt	2025-02-22 22:16:08.845615390 +0300
++++ OrcaSlicer-2.3.0-beta/src/libslic3r/CMakeLists.txt	2025-02-22 22:33:35.030403046 +0300
+@@ -524,11 +524,8 @@
+ find_package(JPEG REQUIRED)
+ 
+ set(OCCT_LIBS
+-    TKXDESTEP
+-    TKSTEP
+-    TKSTEP209
+-    TKSTEPAttr
+-    TKSTEPBase
++    TKDESTL
++    TKDESTEP
+     TKXCAF
+     TKXSBase
+     TKVCAF
