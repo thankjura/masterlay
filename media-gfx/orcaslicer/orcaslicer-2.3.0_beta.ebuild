@@ -31,7 +31,7 @@ RDEPEND="
 	dev-libs/mpfr:=
 	media-gfx/openvdb:=
 	x11-libs/wxGTK[curl]
-	media-libs/mesa[osmesa]
+	media-libs/mesa
 	media-libs/glew:0=
 	media-libs/libjpeg-turbo:=
 	media-libs/libpng:0=
@@ -55,6 +55,7 @@ DEPEND="${RDEPEND}
 PATCHES=(
 	"${FILESDIR}/orcaslicer-2.2.0-fix-wx.patch"
 	"${FILESDIR}/orcaslicer-2.2.0-fix-install-path.patch"
+	"${FILESDIR}/orcaslicer-2.2.0-no-osmesa.patch"
 	"${FILESDIR}/7057.patch"
 	"${FILESDIR}/7591.patch"
 	"${FILESDIR}/orcaslicer-2.2.0-fix-boost.patch"
