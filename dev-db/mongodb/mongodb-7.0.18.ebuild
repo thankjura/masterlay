@@ -78,7 +78,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-5.0.2-skip-reqs-check.patch"
 	"${FILESDIR}/${PN}-7.0.1-sconstruct.patch"
 	"${FILESDIR}/extrapatch-sconstruct.patch"
-	"${FILESDIR}/mongodb-7.0.12-boost-1.85.patch"
+	"${FILESDIR}/mongodb-7.0.18-boost-1.85.patch"
 )
 
 python_check_deps() {
