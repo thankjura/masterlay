@@ -1,0 +1,37 @@
+From 5298bb32e7606d2d12c31b92ff3a77e9bbab1f77 Mon Sep 17 00:00:00 2001
+From: Andrew Udvare <audvare@gmail.com>
+Date: Sun, 27 Oct 2024 06:08:21 -0400
+Subject: [PATCH] Build system fix
+
+---
+ src/encoder.cpp                | 1 +
+ tools/video2x/src/argparse.cpp | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/src/encoder.cpp b/src/encoder.cpp
+index dfb6e31..f9a7f03 100644
+--- a/src/encoder.cpp
++++ b/src/encoder.cpp
+@@ -10,6 +10,7 @@ extern "C" {
+ 
+ #include "avutils.h"
+ #include "conversions.h"
++#include "libvideo2x/fsutils.h"
+ 
+ namespace video2x {
+ namespace encoder {
+diff --git a/tools/video2x/src/argparse.cpp b/tools/video2x/src/argparse.cpp
+index 2c3eec6..18e2c7f 100644
+--- a/tools/video2x/src/argparse.cpp
++++ b/tools/video2x/src/argparse.cpp
+@@ -7,6 +7,7 @@
+ #include <cwchar>
+ #endif
+ 
++#include <libvideo2x/fsutils.h>
+ #include <libvideo2x/logger_manager.h>
+ #include <libvideo2x/version.h>
+ #include <spdlog/spdlog.h>
+-- 
+2.48.1
+
