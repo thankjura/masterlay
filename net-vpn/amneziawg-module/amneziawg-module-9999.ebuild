@@ -25,6 +25,11 @@ IUSE="debug module-src"
 
 CONFIG_CHECK="NET INET NET_UDP_TUNNEL CRYPTO_ALGAPI"
 
+src_prepare() {
+	default
+	eapply -p2 ${FILESDIR}/145.patch
+}
+
 src_compile() {
 	ln -sf "${KV_OUT_DIR}" "kernel"
 	use debug && MODULES_MAKEARGS+=( CONFIG_WIREGUARD_DEBUG=y )
