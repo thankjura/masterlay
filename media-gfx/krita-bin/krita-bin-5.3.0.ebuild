@@ -9,7 +9,7 @@ DESCRIPTION="Free digital painting application. Digital Painting, Creative Freed
 HOMEPAGE="https://krita.org/"
 RESTRICT="strip"
 
-SRC_URI="http://download.kde.org/stable/krita/${PV/b/}/krita-${PV}-x86_64.appimage"
+SRC_URI="http://download.kde.org/stable/krita/${PV/b/}/krita-${PV}-x86_64.AppImage -> krita-${PV}-x86_64.AppImage"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -24,7 +24,7 @@ RDEPEND="${DEPEND}"
 S=${WORKDIR}
 
 src_unpack() {
-	cp ${DISTDIR}/krita-${PV}-x86_64.appimage krita.appimage || die "Can't copy source file"
+	cp ${DISTDIR}/krita-${PV}-x86_64.AppImage krita.appimage || die "Can't copy source file"
 	chmod a+x krita.appimage || die "Can't chmod archive file"
 	./krita.appimage --appimage-extract "org.kde.krita.desktop" || die "Failed to extract .desktop from appimage"
 	./krita.appimage --appimage-extract "usr/share/icons" || die "Failed to extract hicolor icons from app image"
