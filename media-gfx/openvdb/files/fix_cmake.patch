@@ -1,0 +1,13 @@
+diff -ru openvdb-13.0.0.old/CMakeLists.txt openvdb-13.0.0/CMakeLists.txt
+--- openvdb-13.0.0.old/CMakeLists.txt	2026-06-01 22:12:01.202299785 +0300
++++ openvdb-13.0.0/CMakeLists.txt	2026-06-01 22:18:18.084129013 +0300
+@@ -321,9 +321,7 @@
+     cmake/FindBlosc.cmake
+     cmake/FindJemalloc.cmake
+     cmake/FindLog4cplus.cmake
+-    cmake/FindOpenEXR.cmake
+     cmake/FindOpenVDB.cmake
+-    cmake/FindTBB.cmake
+     cmake/OpenVDBGLFW3Setup.cmake
+     cmake/OpenVDBHoudiniSetup.cmake
+     cmake/OpenVDBMayaSetup.cmake

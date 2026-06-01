@@ -1,0 +1,50 @@
+From cf0f87b68e84f09ab1aa14812b172bc67ba75822 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jakub=20Klinkovsk=C3=BD?=
+ <lahwaacz@users.noreply.github.com>
+Date: Wed, 6 May 2026 07:58:27 +0000
+Subject: [PATCH] Fix invalid C++ syntax: remove leading :: after struct in
+ proclaims_copyable_arguments specializations (#8771)
+
+(cherry picked from commit 8e41eeabe54ab9ae48ad5640cfa7153b0a1071af)
+---
+ cub/cub/device/device_transform.cuh                 | 5 ++++-
+ cub/cub/device/dispatch/tuning/tuning_transform.cuh | 6 ++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/cub/cub/device/device_transform.cuh b/cub/cub/device/device_transform.cuh
+index b09a054c3aa..4191e489081 100644
+--- a/cub/cub/device/device_transform.cuh
++++ b/cub/cub/device/device_transform.cuh
+@@ -41,9 +41,12 @@ struct __return_constant
+ } // namespace detail
+ CUB_NAMESPACE_END
+ 
++namespace cuda
++{
+ template <typename T>
+-struct ::cuda::proclaims_copyable_arguments<CUB_NS_QUALIFIER::detail::__return_constant<T>> : ::cuda::std::true_type
++struct proclaims_copyable_arguments<CUB_NS_QUALIFIER::detail::__return_constant<T>> : ::cuda::std::true_type
+ {};
++} // namespace cuda
+ 
+ CUB_NAMESPACE_BEGIN
+ namespace detail::transform
+diff --git a/cub/cub/device/dispatch/tuning/tuning_transform.cuh b/cub/cub/device/dispatch/tuning/tuning_transform.cuh
+index ef6acf208e0..210866add05 100644
+--- a/cub/cub/device/dispatch/tuning/tuning_transform.cuh
++++ b/cub/cub/device/dispatch/tuning/tuning_transform.cuh
+@@ -47,10 +47,12 @@ struct always_true_predicate
+ } // namespace detail::transform
+ CUB_NAMESPACE_END
+ 
++namespace cuda
++{
+ template <>
+-struct ::cuda::proclaims_copyable_arguments<CUB_NS_QUALIFIER::detail::transform::always_true_predicate>
+-    : ::cuda::std::true_type
++struct proclaims_copyable_arguments<CUB_NS_QUALIFIER::detail::transform::always_true_predicate> : ::cuda::std::true_type
+ {};
++} // namespace cuda
+ 
+ CUB_NAMESPACE_BEGIN
+ namespace detail::transform

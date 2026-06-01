@@ -1,0 +1,21 @@
+diff -ru openvdb-13.0.0.old/nanovdb/nanovdb/CMakeLists.txt openvdb-13.0.0/nanovdb/nanovdb/CMakeLists.txt
+--- openvdb-13.0.0.old/nanovdb/nanovdb/CMakeLists.txt	2026-06-01 22:10:13.383433786 +0300
++++ openvdb-13.0.0/nanovdb/nanovdb/CMakeLists.txt	2026-06-01 22:11:06.310393890 +0300
+@@ -118,17 +118,6 @@
+   endif()
+ 
+   find_package(CUDAToolkit)
+-
+-
+-  include(../../cmake/CPM.cmake)
+-
+-  # This will automatically clone CCCL from GitHub and make the exported cmake targets available
+-  CPMAddPackage(
+-      NAME CCCL
+-      GITHUB_REPOSITORY nvidia/cccl
+-      GIT_TAG main # Fetches the latest commit on the main branch
+-  )
+-
+   find_package(NCCL)
+ endif()
+ 
