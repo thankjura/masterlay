@@ -3,6 +3,8 @@
 
 EAPI=8
 
+inherit xdg
+
 DESCRIPTION="Orca Slicer is a free 3D printing slicer created by SoftFever."
 
 HOMEPAGE="https://orca-slicer.com/"
@@ -33,15 +35,15 @@ QA_PREBUILT="*"
 src_unpack() {
 	cp ${DISTDIR}/OrcaSlicer_Linux_AppImage_Ubuntu2404_V${MY_PV}.AppImage orcaslicer.appimage || die "Can't copy source file"
 	chmod a+x orcaslicer.appimage ||  die "Can't chmod archive file"
-	./orcaslicer.appimage --appimage-extract "usr/share/icons" || die "Failed to extract hicolor icons from app image"
-	./orcaslicer.appimage --appimage-extract "OrcaSlicer.desktop" || die "Failed to extract .desktop from appimage"
+	./orcaslicer.appimage --appimage-extract "OrcaSlicer.png" || die "Failed to extract hicolor icons from app image"
+	./orcaslicer.appimage --appimage-extract "com.orcaslicer.OrcaSlicer.desktop" || die "Failed to extract .desktop from appimage"
 }
 
 src_install() {
-	sed -i "s/Exec=AppRun/Exec=orca-slicer/g" squashfs-root/OrcaSlicer.desktop
+	sed -i "s/Exec=AppRun/Exec=orca-slicer/g" squashfs-root/com.orcaslicer.OrcaSlicer.desktop
 	newbin orcaslicer.appimage orca-slicer
 	insinto /usr/share/applications
-	doins "squashfs-root/OrcaSlicer.desktop"
+	doins "squashfs-root/com.orcaslicer.OrcaSlicer.desktop"
 	insinto /usr/share/icons
-	doins -r squashfs-root/usr/share/icons
+	doins squashfs-root/OrcaSlicer.png
 }
