@@ -51,6 +51,7 @@ src_prepare() {
 
 	# TODO: remove system libs
 	# rm -rf ${S}/usr/share/max/lib64/libQt6*
+	rm -rf ${S}/usr/share/max/bin/max-service/lib64/libsystemd.*
 
 	for f in "${files[@]}"; do
 		patchelf --set-rpath '$ORIGIN' ${lib_dir}/${f}
