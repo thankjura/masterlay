@@ -13,8 +13,8 @@ KEYWORDS="~amd64"
 DEPEND="
 	gui-apps/caelestia-cli
 	gui-apps/caelestia-shell
-	gui-apps/hyprlauncher
 	gui-libs/xdg-desktop-portal-hyprland
 	gui-wm/hyprland
 	hyprland-plugin/hyprexpo
+	media-sound/playerctl
 "
