@@ -17,6 +17,7 @@ SRC_URI="
 LICENSE="GPL-3.0-only"
 SLOT="0"
 KEYWORDS="~amd64"
+IUSE="+i18n"
 
 DEPEND="
 	gui-apps/caelestia-cli
@@ -39,9 +40,10 @@ DEPEND="
 	dev-qt/qtimageformats:6
 "
 DEPEND="${DEPEND}"
-PATCHES="
-	${FILESDIR}/fix-qt6.patch
-"
+PATCHES=(
+	"${FILESDIR}/fix-qt6.patch"
+)
+
 S=${WORKDIR}/release
 
 src_unpack() {
@@ -50,10 +52,18 @@ src_unpack() {
 	mv "${WORKDIR}/m3shapes-${M3SHAPES_REV}" "${WORKDIR}/release_build/_deps/m3shapes-${M3SHAPES_REV}" || die
 }
 
+src_prepare() {
+	if use i18n; then
+		PATCHES+=( "${FILESDIR}/i18n.patch" )
+	fi
+
+	cmake_src_prepare
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DVERSION=${PV}
-		-DGIT_REVISION="$(cat REVISION)"
+		-DGIT_REVISION="${COMMIT}"
 		-DDISTRIBUTOR="Gentoo"
 		-DFETCHCONTENT_FULLY_DISCONNECTED=ON
 		-DCMAKE_INSTALL_PREFIX=/
