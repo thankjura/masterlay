@@ -15,6 +15,5 @@ DEPEND="
 	gui-apps/caelestia-shell
 	gui-libs/xdg-desktop-portal-hyprland
 	gui-wm/hyprland
-	hyprland-plugin/hyprexpo
 	media-sound/playerctl
 "
