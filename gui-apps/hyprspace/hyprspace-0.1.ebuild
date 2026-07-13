@@ -30,6 +30,8 @@ DEPEND="
 RDEPEND="${DEPEND}"
 BDEPEND=""
 
+PATCHES="${FILESDIR}/fix-render.patch"
+
 S=${WORKDIR}/Hyprspace-${COMMIT}
 
 src_compile() {

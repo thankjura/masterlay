@@ -1,0 +1,30 @@
+diff -ru Hyprspace-0c0fe4fc9cc9eac42d6891b840c349263ce42dba.old/src/Render.cpp Hyprspace-0c0fe4fc9cc9eac42d6891b840c349263ce42dba/src/Render.cpp
+--- Hyprspace-0c0fe4fc9cc9eac42d6891b840c349263ce42dba.old/src/Render.cpp	2026-07-08 00:52:30.000000000 +0300
++++ Hyprspace-0c0fe4fc9cc9eac42d6891b840c349263ce42dba/src/Render.cpp	2026-07-13 03:49:33.348439925 +0300
+@@ -71,7 +71,7 @@
+     renderdata.surface              = pWindow->wlSurface()->resource();
+     renderdata.dontRound            = pWindow->isEffectiveInternalFSMode(FSMODE_FULLSCREEN);
+     renderdata.fadeAlpha            = 1.F;
+-    renderdata.alpha                = 1.F;
++    renderdata.alpha                = 0.999F;
+     renderdata.decorate             = false;
+     renderdata.rounding             = renderdata.dontRound ? 0 : pWindow->rounding() * scaleMod * pMonitor->m_scale;
+     renderdata.roundingPower        = renderdata.dontRound ? 2.0F : pWindow->roundingPower();
+@@ -103,7 +103,7 @@
+ void renderLayerStub(PHLLS pLayer, PHLMONITOR pMonitor, CBox rectOverride, CBox clipBox, const Time::steady_tp& time) {
+     if (!pLayer || !pMonitor) return;
+ 
+-    if (!pLayer->m_mapped || pLayer->m_readyToDelete || !pLayer->m_layerSurface || !pLayer->wlSurface() || !pLayer->wlSurface()->resource()) return;
++    if (!pLayer->m_mapped || !pLayer->m_layerSurface || !pLayer->wlSurface() || !pLayer->wlSurface()->resource()) return;
+ 
+     Vector2D oRealPosition = pLayer->m_realPosition->value();
+     Vector2D oSize = pLayer->m_realSize->value();
+@@ -124,7 +124,7 @@
+ 
+     CSurfacePassElement::SRenderData renderdata = {pMonitor, time, oRealPosition};
+     renderdata.fadeAlpha                        = 1.F;
+-    renderdata.alpha                            = 1.F;
++    renderdata.alpha                            = 0.999F;
+     renderdata.blur                             = false;
+     renderdata.surface                          = pLayer->wlSurface()->resource();
+     renderdata.decorate                         = false;
