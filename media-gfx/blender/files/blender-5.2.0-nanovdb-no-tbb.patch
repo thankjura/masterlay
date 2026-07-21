@@ -1,0 +1,19 @@
+Don't use TBB for OpenVDB->NanoVDB grid conversion.
+
+nanovdb from openvdb 12 (newest version packaged on Gentoo) passes a
+non-const Range& lambda to tbb::parallel_reduce in util/Reduce.h, which
+modern oneTBB rejects, breaking the nanovdb::FpN instantiations in
+cycles/util/nanovdb.cpp. Upstream builds against openvdb 13 where this
+is fixed. Falling back to the serial path only slows down VDB volume
+upload a little.
+
+--- a/intern/cycles/util/nanovdb.h
++++ b/intern/cycles/util/nanovdb.h
+@@ -10,7 +10,6 @@
+ #  include <openvdb/openvdb.h>
+
+ #  define NANOVDB_USE_OPENVDB
+-#  define NANOVDB_USE_TBB
+
+ #  include <nanovdb/NanoVDB.h>  // manages and streams the raw memory buffer of a NanoVDB grid.
+

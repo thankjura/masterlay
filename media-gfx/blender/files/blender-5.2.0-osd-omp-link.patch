@@ -6,12 +6,12 @@ causing __kmpc_fork_call link failures when built with Clang.
 @@ -56,6 +56,11 @@ foreach(COMPONENT ${_opensubdiv_FIND_COMPONENTS})
    list(APPEND _opensubdiv_LIBRARIES "${OPENSUBDIV_${UPPERCOMPONENT}_LIBRARY}")
  endforeach()
- 
+
 +find_package(OpenMP QUIET)
 +if(OpenMP_CXX_FOUND)
 +  list(APPEND _opensubdiv_LIBRARIES OpenMP::OpenMP_CXX)
 +endif()
 +
- macro(OPENSUBDIV_CHECK_CONTROLLER
-       controller_include_file
-       variable_name)
+ # Return values:
+ # - `${variable_name}`: `TRUE` if the controller include file exists.
+ function(OPENSUBDIV_CHECK_CONTROLLER

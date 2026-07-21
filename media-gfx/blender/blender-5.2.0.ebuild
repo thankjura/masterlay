@@ -11,14 +11,12 @@
 # 	https://github.com/PixarAnimationStudios/OpenUSD
 # - Package MaterialX
 # 	https://github.com/AcademySoftwareFoundation/MaterialX
-# - Package Draco
-# 	https://github.com/google/draco
 # - Package Audaspace
 # 	https://github.com/neXyon/audaspace
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{13..14} )
+PYTHON_COMPAT=( python3_{12..14} )
 # NOTE must match media-libs/osl
 LLVM_COMPAT=( {20..20} )
 LLVM_OPTIONAL=1
@@ -57,7 +55,9 @@ else
 			https://download.blender.org/source/blender-test-data-${BLENDER_BRANCH}.0.tar.xz
 		)
 	"
-	KEYWORDS="~amd64 ~arm64"
+	# arm64 dropped: this overlay's ceres-solver/draco/meshoptimizer deps are
+	# amd64-only, so a ~arm64 keyword here would be unsolvable.
+	KEYWORDS="~amd64"
 fi
 
 # assets is CC0-1.0
@@ -67,9 +67,9 @@ SLOT="${BLENDER_BRANCH}"
 # NOTE +openpgl breaks on very old amd64 hardware
 # potentially mirror cpu_flags_x86 + REQUIRED_USE
 IUSE="
-	alembic +bullet +color-management cuda +cycles +cycles-bin-kernels
+	alembic +bullet cuda +cycles +cycles-bin-kernels
 	debug doc +embree +ffmpeg +fftw +fluid +gmp gnome hip hiprt jack
-	jemalloc jpeg2k man +manifold +nanovdb ndof nls +oidn openal +openexr +opengl +openpgl
+	jpeg2k man +manifold +nanovdb ndof nls +oidn openal +opengl +openpgl
 	+opensubdiv +openvdb optix osl pipewire +pdf +potrace +pugixml pulseaudio
 	renderdoc +rubberband sdl +sndfile +tbb test +tiff +truetype valgrind vulkan wayland +webp X
 "
@@ -82,21 +82,17 @@ RESTRICT="!test? ( test )"
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}
 	|| ( opengl vulkan )
-	alembic? ( openexr )
 	cuda? ( cycles )
-	cycles? ( openexr tiff tbb )
+	cycles? ( tiff tbb )
 	fluid? ( tbb )
 	gnome? ( wayland )
 	hip? ( cycles )
 	hiprt? ( hip )
 	nanovdb? ( openvdb )
-	openvdb? ( tbb openexr )
+	openvdb? ( tbb )
 	optix? ( cuda )
 	osl? ( cycles pugixml )
-	test? (
-		color-management
-		jpeg2k
-	)
+	test? ( jpeg2k )
 "
 
 # Library versions for official builds can be found in the blender source directory in:
@@ -106,7 +102,7 @@ RDEPEND="${PYTHON_DEPS}
 	app-arch/zstd
 	dev-cpp/gflags:=
 	dev-cpp/glog:=
-	dev-libs/boost:=[nls?]
+	>=dev-libs/imath-3.1.7:=
 	$(python_gen_cond_dep '
 		dev-python/cattrs[${PYTHON_USEDEP}]
 		dev-python/cython[${PYTHON_USEDEP}]
@@ -114,26 +110,28 @@ RDEPEND="${PYTHON_DEPS}
 		dev-python/requests[${PYTHON_USEDEP}]
 		dev-python/zstandard[${PYTHON_USEDEP}]
 	')
+	media-libs/draco:=
 	>=media-libs/freetype-2.13.3:=[brotli]
 	media-libs/libepoxy:=
 	media-libs/libjpeg-turbo:=
 	>=media-libs/libpng-1.6.50:=
 	media-libs/libsamplerate
+	media-libs/meshoptimizer:=
+	>=media-libs/opencolorio-2.5.0:=
+	>=media-libs/openexr-3.3.5:0=
 	>=media-libs/openimageio-3.0.9.1:=
-	sci-libs/ceres-solver
+	sci-libs/ceres-solver:=
 	virtual/glu
 	virtual/libintl
 	virtual/opengl[X?]
 	virtual/zlib:=
 	alembic? ( >=media-gfx/alembic-1.8.3-r2[boost(+),hdf(+)] )
 	bullet? ( sci-physics/bullet:=[double-precision] )
-	color-management? ( >=media-libs/opencolorio-2.4.2:= )
 	cuda? ( dev-util/nvidia-cuda-toolkit:= )
 	embree? ( media-libs/embree:=[raymask] )
 	ffmpeg? ( media-video/ffmpeg:=[encode(+),lame(-),jpeg2k?,opus,theora,vorbis,vpx,x264,xvid] )
 	fftw? ( sci-libs/fftw:3.0=[threads] )
 	gmp? ( dev-libs/gmp:=[cxx] )
-	gnome? ( gui-libs/libdecor )
 	hip? (
 		>=dev-util/hip-6.0:=
 		hiprt? (
@@ -141,7 +139,6 @@ RDEPEND="${PYTHON_DEPS}
 		)
 	)
 	jack? ( virtual/jack )
-	jemalloc? ( dev-libs/jemalloc:= )
 	jpeg2k? ( >=media-libs/openjpeg-2.5.3:2= )
 	manifold? ( >=sci-mathematics/manifold-3.2.1:= )
 	ndof? (
@@ -151,14 +148,10 @@ RDEPEND="${PYTHON_DEPS}
 	nls? ( virtual/libiconv )
 	openal? ( media-libs/openal )
 	oidn? ( >=media-libs/oidn-2.1.0:= )
-	openexr? (
-		>=dev-libs/imath-3.1.7:=
-		>=media-libs/openexr-3.3.5:0=
-	)
 	openpgl? ( media-libs/openpgl:= )
 	opensubdiv? ( >=media-libs/opensubdiv-3.6.0-r2:=[opengl,cuda?,tbb?] )
 	openvdb? (
-		>=media-gfx/openvdb-13.0.0:=[nanovdb?]
+		>=media-gfx/openvdb-11.0.0:=[nanovdb?]
 		dev-libs/c-blosc:=
 	)
 	optix? (
@@ -177,7 +170,7 @@ RDEPEND="${PYTHON_DEPS}
 	pugixml? ( dev-libs/pugixml )
 	pulseaudio? ( media-libs/libpulse )
 	rubberband? ( >=media-libs/rubberband-4.0.0:= )
-	sdl? ( media-libs/libsdl2[sound,joystick] )
+	sdl? ( media-libs/libsdl3 )
 	sndfile? ( media-libs/libsndfile )
 	tbb? ( dev-cpp/tbb:= )
 	tiff? ( media-libs/tiff:= )
@@ -211,8 +204,9 @@ RDEPEND="${PYTHON_DEPS}
 	)
 "
 
+# >=eigen-5: libmv needs the templated jacobiSvd API added after eigen-3.4
 DEPEND="${RDEPEND}
-	dev-cpp/eigen:=
+	>=dev-cpp/eigen-5.0.0:=
 	test? (
 		$(python_gen_cond_dep '
 			media-libs/openimageio[jpeg2k,python,${PYTHON_SINGLE_USEDEP},tools]
@@ -260,8 +254,9 @@ PATCHES=(
 	"${FILESDIR}/${PN}-5.0.0-FindClang.patch"
 	"${FILESDIR}/${PN}-4.1.1-FindLLVM.patch"
 	"${FILESDIR}/${PN}-4.3.2-system-glog.patch"
-	"${FILESDIR}/${PN}-5.0.0-osd-omp-link.patch"
-	"${FILESDIR}/${PN}-5.1.0-eigen-3.4-jacobiSvd.patch"
+	"${FILESDIR}/${PN}-5.2.0-osd-omp-link.patch"
+	"${FILESDIR}/${PN}-5.2.0-nanovdb-no-tbb.patch"
+	"${FILESDIR}/${PN}-5.2.0-cycles-light-node-instantiation.patch"
 )
 
 blender_check_requirements() {
@@ -334,12 +329,14 @@ src_prepare() {
 	blender_get_version
 
 	# Prepare icons and .desktop files for slotting.
+	# Since 5.2 the app icon is also embedded into the binary (Wayland CSD),
+	# so the windowmanager reference needs the same rename.
 	sed \
 		-e "s|blender.svg|blender-${BV}.svg|" \
 		-e "s|blender-symbolic.svg|blender-${BV}-symbolic.svg|" \
 		-e "s|blender.desktop|blender-${BV}.desktop|" \
 		-e "s|org.blender.Blender.metainfo.xml|blender-${BV}.metainfo.xml|" \
-		-i source/creator/CMakeLists.txt || die
+		-i source/creator/CMakeLists.txt source/blender/windowmanager/CMakeLists.txt || die
 
 	sed \
 		-e "s|Name=Blender|Name=Blender ${BV}|" \
@@ -399,11 +396,6 @@ src_prepare() {
 	fi
 
 	rm -rf extern/gflags || die
-
-	# Use slotted libhiprt64
-	sed \
-		-e "s|\"libhiprt64.so\"|\"${ESYSROOT}/usr/lib/hiprt/2.5/$(get_libdir)/libhiprt64.so\"|" \
-		-i extern/hipew/src/hiprtew.cc || die
 }
 
 src_configure() {
@@ -411,6 +403,7 @@ src_configure() {
 	# https://bugs.gentoo.org/859607
 	# https://projects.blender.org/blender/blender/issues/120444
 	filter-lto
+	filter-flags -Werror=strict-aliasing -Werror=odr -Werror=lto-type-mismatch
 
 	# Workaround for bug #922600
 	append-ldflags "$(test-flags-CCLD -Wl,--undefined-version)"
@@ -429,7 +422,6 @@ src_configure() {
 
 		# Build Options:
 		-DWITH_ALEMBIC="$(usex alembic)"
-		-DWITH_BOOST="yes"
 		-DWITH_BULLET="$(usex bullet)"
 		-DWITH_CYCLES="$(usex cycles)"
 		-DWITH_DOC_MANPAGE="$(usex man)"
@@ -444,7 +436,6 @@ src_configure() {
 		-DWITH_MANIFOLD="$(usex manifold)"
 		-DWITH_MATERIALX="no" # TODO: Package MaterialX
 		-DWITH_NANOVDB="$(usex nanovdb)"
-		-DWITH_OPENCOLORIO="$(usex color-management)"
 		-DWITH_OPENGL_BACKEND="$(usex opengl)"
 		-DWITH_OPENIMAGEDENOISE="$(usex oidn)"
 		-DWITH_OPENSUBDIV="$(usex opensubdiv)"
@@ -461,17 +452,16 @@ src_configure() {
 		-DWITH_XR_OPENXR="no"
 
 		-DWITH_SYSTEM_BULLET="yes"
-		-DWITH_SYSTEM_EIGEN3="yes"
 		-DWITH_SYSTEM_FREETYPE="yes"
 		-DWITH_SYSTEM_GFLAGS="yes"
 		-DWITH_SYSTEM_GLOG="yes"
 
 		# Compiler Options:
 		# -DWITH_BUILDINFO="yes"
+		-DWITH_COMPILER_SIMD="no" # This makes it so Blender doesn't append their own -march flags
 
 		# System Options:
 		-DWITH_INSTALL_PORTABLE="no"
-		-DWITH_MEM_JEMALLOC="$(usex jemalloc)"
 		-DWITH_MEM_VALGRIND="$(usex valgrind)"
 
 		# GHOST Options:
@@ -487,7 +477,6 @@ src_configure() {
 
 		# Image Formats:
 		# -DWITH_IMAGE_CINEON=ON
-		-DWITH_IMAGE_OPENEXR="$(usex openexr)"
 		-DWITH_IMAGE_OPENJPEG="$(usex jpeg2k)"
 		-DWITH_IMAGE_WEBP="$(usex webp)" # unlisted
 
@@ -504,7 +493,7 @@ src_configure() {
 		# -DWITH_PIPEWIRE_DYNLOAD=
 		-DWITH_PULSEAUDIO="$(usex pulseaudio)"
 		# -DWITH_PULSEAUDIO_DYNLOAD=
-		-DWITH_SDL="$(usex sdl)"
+		-DWITH_SDL_AUDIO="$(usex sdl)"
 		# -DWITH_WASAPI=OFF
 
 		# Python:
@@ -517,7 +506,9 @@ src_configure() {
 		-DPYTHON_INCLUDE_DIR="$(python_get_includedir)"
 		-DPYTHON_LIBRARY="$(python_get_library_path)"
 		-DPYTHON_VERSION="${EPYTHON/python/}"
-		-DWITH_DRACO="yes" # TODO: Package Draco # NOTE use bundled for now
+		# Since 5.2 draco and meshoptimizer are unbundled (system libs, glTF I/O)
+		-DWITH_DRACO="yes"
+		-DWITH_MESHOPTIMIZER="yes"
 
 		# Modifiers:
 		-DWITH_MOD_FLUID="$(usex fluid)"
@@ -554,7 +545,8 @@ src_configure() {
 		# -DWITH_IK_ITASC=ON
 		# -DWITH_IK_SOLVER=ON
 		# -DWITH_INPUT_IME=ON
-		# -DWITH_LIBMV=ON
+		# Since 5.1 libmv needs a system (unbundled) sci-libs/ceres-solver
+		-DWITH_LIBMV="yes"
 		# -DWITH_LIBMV_SCHUR_SPECIALIZATIONS=ON
 		# -DWITH_UV_SLIM=ON
 		-DWITH_NINJA_POOL_JOBS="yes"
@@ -613,6 +605,7 @@ src_configure() {
 		if use hiprt; then
 			mycmakeargs+=(
 				-DHIPRT_ROOT_DIR="${ESYSROOT}/usr/lib/hiprt/2.5"
+				-DHIP_HIPCC_FLAGS="-fcf-protection=none"
 				-DHIPRT_COMPILER_PARALLEL_JOBS="$(makeopts_jobs)"
 			)
 		fi
@@ -628,7 +621,7 @@ src_configure() {
 	if use wayland; then
 		mycmakeargs+=(
 			-DWITH_GHOST_WAYLAND_APP_ID="blender-${BV}"
-			-DWITH_GHOST_WAYLAND_LIBDECOR="$(usex gnome)"
+			-DWITH_GHOST_CSD="$(usex gnome)"
 		)
 	fi
 
@@ -638,13 +631,6 @@ src_configure() {
 	# WITH_ASSERT_RELEASE filters this
 	append-cflags "$(usex debug '-DDEBUG' '-DNDEBUG')"
 	append-cxxflags "$(usex debug '-DDEBUG' '-DNDEBUG')"
-
-	if tc-is-gcc; then
-		# We disable these to respect the user's choice of linker.
-		mycmakeargs+=(
-			-DWITH_LINKER_GOLD="no"
-		)
-	fi
 
 	if use osl; then
 		mycmakeargs+=(
@@ -746,14 +732,6 @@ src_test() {
 	local -x CMAKE_SKIP_TESTS=(
 		"^script_pyapi_bpy_driver_secure_eval$"
 	)
-
-	if [[ "${RUN_FAILING_TESTS:-0}" -eq 0 ]]; then
-		einfo "not running failing tests RUN_FAILING_TESTS=${RUN_FAILING_TESTS}"
-		CMAKE_SKIP_TESTS+=(
-			# Does try to import from weird paths
-			"^io_fbx_import$"
-		)
-	fi
 
 	if ! has_version "media-libs/openusd"; then
 		CMAKE_SKIP_TESTS+=(
@@ -902,15 +880,6 @@ pkg_postinst() {
 		ewarn "an other LLVM version than what OSL is linked to."
 		ewarn "See https://bugs.gentoo.org/880671 for more details"
 		ewarn ""
-	fi
-
-	# NOTE build_files/cmake/Modules/FindPythonLibsUnix.cmake: set(_PYTHON_VERSION_SUPPORTED 3.11)
-	if ! use python_single_target_python3_13; then
-		ewarn "You are building Blender with a newer python version than"
-		ewarn "supported by this version upstream."
-		ewarn "If you experience breakages with e.g. plugins, please switch to"
-		ewarn "PYTHON_SINGLE_TARGET: python3_13 instead."
-		ewarn
 	fi
 
 	xdg_icon_cache_update

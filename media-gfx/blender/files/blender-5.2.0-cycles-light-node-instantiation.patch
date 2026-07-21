@@ -1,0 +1,26 @@
+Scene::create_light_node<T> is defined only in scene.cpp but called
+directly from blender/light.cpp and blender/geometry.cpp. Nothing
+explicitly instantiates it, so those TUs rely on the implicit
+instantiations in scene.cpp surviving as out-of-line COMDAT symbols.
+With GCC at -O3 they are inlined into the create_node<T>
+specializations and discarded, and the final link fails with
+"undefined symbol: ccl::Scene::create_light_node<...>" for all five
+light types. Add explicit instantiation definitions, which are
+guaranteed to be emitted with external linkage.
+--- a/intern/cycles/scene/scene.cpp
++++ b/intern/cycles/scene/scene.cpp
+@@ -875,6 +875,14 @@ template<class T> T *Scene::create_light_node()
+   return node_ptr;
+ }
+
++/* Explicit instantiations for use from blender/light.cpp and
++ * blender/geometry.cpp. */
++template PointLight *Scene::create_light_node<PointLight>();
++template SpotLight *Scene::create_light_node<SpotLight>();
++template AreaLight *Scene::create_light_node<AreaLight>();
++template SunLight *Scene::create_light_node<SunLight>();
++template BackgroundLight *Scene::create_light_node<BackgroundLight>();
++
+ template<> PointLight *Scene::create_node<PointLight>()
+ {
+   return create_light_node<PointLight>();
