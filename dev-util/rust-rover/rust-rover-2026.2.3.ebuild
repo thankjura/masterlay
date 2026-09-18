@@ -33,7 +33,7 @@ RDEPEND="
 
 MY_PN="rustrover"
 SIMPLE_NAME="Rust Rover"
-SRC_URI="https://download-cdn.jetbrains.com/rustrover/RustRover-${PV}.tar.gz"
+SRC_URI="https://download.jetbrains.com/rustrover/RustRover-${PV}.tar.gz"
 
 S=${WORKDIR}/RustRover-${PV}
 
@@ -49,7 +49,9 @@ src_install() {
 	fperms 755 "${dir}"/bin/gdb/linux/x64/bin/{gcore,gdb,gdb-add-index,gdbserver}
 	fperms 755 "${dir}"/bin/lldb/linux/x64/bin/{lldb,lldb-argdumper,LLDBFrontend,lldb-server}
 	fperms 755 "${dir}"/jbr/bin/{java,javac,javadoc,jcmd,jdb,jfr,jhsdb,jinfo,jmap,jps,jrunscript,jstack,jstat,keytool,rmiregistry,serialver}
-	fperms 755 "${dir}"/jbr/lib/{chrome-sandbox,jcef_helper,jexec,jspawnhelper}
+	fperms 755 "${dir}"/jbr/lib/{jexec,jspawnhelper}
+
+	fperms 755 "${dir}"/plugins/nativeDebug-plugin/bin/lldb/linux/x64/bin/LLDBFrontend
 
 	make_wrapper "${PN}" "${dir}"/bin/"${MY_PN}".sh
 	newicon bin/"${MY_PN}".svg "${PN}".svg
