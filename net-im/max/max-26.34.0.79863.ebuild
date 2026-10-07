@@ -47,6 +47,8 @@ src_prepare() {
 		"libcall-service.so"
 		"liburl_parser.so"
 		"libtext_utils.so"
+		"libemoji.so"
+		"libnotifications.so"
 	)
 
 	# TODO: remove system libs
