@@ -9,7 +9,8 @@ DESCRIPTION="Free digital painting application. Digital Painting, Creative Freed
 HOMEPAGE="https://krita.org/"
 RESTRICT="strip"
 
-SRC_URI="http://download.kde.org/stable/krita/${PV/b/}/krita-${PV}-x86_64.AppImage -> krita-${PV}-x86_64.AppImage"
+MY_PV=$(ver_cut 1-2)
+SRC_URI="https://cdn.kde.org/ci-builds/graphics/krita/krita-${MY_PV}/linux/krita-${PV}-prealpha-efabcb3781-x86_64.AppImage -> krita-${PV}-x86_64.AppImage"
 
 LICENSE="GPL-3"
 SLOT="0"
